@@ -1,0 +1,45 @@
+FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
+
+# Install dependencies
+RUN apt-get update &&\
+  apt-get install -y \
+    cmake \
+    curl \
+    g++ \
+    gcc \
+    git \
+    liblivemedia-dev \
+    liblog4cpp5 \
+    liblog4cpp5-dev \
+    libv4l-dev \
+    make \
+    nginx \
+    pulseaudio \
+    v4l-utils
+#  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# BUILD
+COPY "$SOURCEFOLDER/onbuild" /tmp/build
+WORKDIR /tmp/build
+
+# Enable Raspberry Pi's camera interface
+RUN printf "bcm2835-v4l2\n" >> /etc/modules
+
+# Copy over our configs for nginx
+RUN rm -rf /etc/nginx/sites-enabled
+COPY "$SOURCEFOLDER/config/sites-enabled" /etc/nginx/sites-enabled
+COPY "$SOURCEFOLDER/config/login.txt" /etc/nginx/.htpasswd
+
+RUN /bin/bash process_passwords.sh
+
+# Cleanup /tmp for good measure
+RUN rm -rf /tmp
+
+WORKDIR /usr/src/app
+# Get webrtc-streamer prebuilt
+RUN curl -Ls https://github.com/mpromonet/webrtc-streamer/releases/download/v0.0.2/webrtc-streamer_v0.0.2_arm-linux-gnueabihf.tgz | tar -xvz
+
+# Enable systemd
+ENV INITSYSTEM on
+
+CMD ./webrtc-streamer -H 127.0.0.1:8000

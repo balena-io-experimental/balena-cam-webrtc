@@ -1,0 +1,8 @@
+# Enter below the credentials you want to use
+# (one per line) in the following format:
+# username:password_hash
+#
+# To obtain a password hash run `openssl passwd`
+# and type in your desired password.
+#
+# Password authentication is automatically enabled.
