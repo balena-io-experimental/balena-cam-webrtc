@@ -5,4 +5,4 @@
 # To obtain a password hash run `openssl passwd`
 # and type in your desired password.
 #
-# Password authentication is automatically enabled.
+# Password authentication will be automatically enabled.
