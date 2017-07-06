@@ -27,4 +27,4 @@ RUN printf "bcm2835-v4l2\n" >> /etc/modules
 # Enable systemd
 ENV INITSYSTEM on
 
-CMD /bin/bash /usr/src/app/start.sh
+CMD ["/bin/bash", "/usr/src/app/start.sh"]
