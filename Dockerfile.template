@@ -1,17 +1,12 @@
-FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
+FROM balenalib/%%RESIN_MACHINE_NAME%%-debian:stretch
 
 # Install dependencies
-RUN apt-get update &&\
-  apt-get install -yq \
-    nginx \
-    pulseaudio \
-    v4l-utils \
-  && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN install_packages nginx pulseaudio v4l-utils
 
 WORKDIR /usr/src/app
 
 # Get webrtc-streamer prebuilt
-RUN curl -Ls https://github.com/mpromonet/webrtc-streamer/releases/download/v0.0.2/webrtc-streamer_v0.0.2_arm-linux-gnueabihf.tgz | tar -xvz
+RUN curl -Ls https://github.com/mpromonet/webrtc-streamer/releases/download/v0.1.1/webrtc-streamer_v0.1.1-dirty_rpi-armv7.tgz | tar -xvz
 
 # Copy over our scripts
 COPY ./app/ /usr/src/app/
